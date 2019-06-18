@@ -35,6 +35,7 @@ public class Main : MonoBehaviour
 	private string id_user;
 	private string last_update;
 	private string current_nation;
+	private string clicked_id;
 	
 	// PREFABS	
 	public Transform menu_nation;
@@ -43,6 +44,11 @@ public class Main : MonoBehaviour
 	
 	public Transform paragraph;
 	public Transform button;
+	public Transform line;
+	public Transform line_background;
+	public Transform label;
+	public Transform inputfield;
+	public Transform dropdown;
 
 	// Start is called before the first frame update
     void Start()
@@ -719,6 +725,8 @@ public class Main : MonoBehaviour
 			// variables used in the page load
 		
 		Transform obj;
+		Transform obj1;
+		Transform obj2;
 		Texture2D texture;
 		string first_field = ""; // used to give focus to the first input field created
 		
@@ -762,7 +770,7 @@ public class Main : MonoBehaviour
 
 					// change thte text
 
-					obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = pageitems.InnerText; // .Replace("{l}", "<").Replace("{b}", ">");
+					obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText); // .Replace("{l}", "<").Replace("{b}", ">");
 										
 					// Change the name of the text for reference
 					
@@ -785,58 +793,323 @@ public class Main : MonoBehaviour
 				else if(pageitems.Name == "button")
 				{
 					
-					obj = Instantiate(button, new Vector3(0, 0, 0), Quaternion.identity);
-					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
 					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(button, new Vector3(10, -4, 0), Quaternion.identity);
+					obj1.SetParent(obj.transform, false);
+					obj1.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					if(pageitems.Attributes["page"] != null)
+					{
+						
+						string send_page = pageitems.Attributes["page"].Value; 
+						string send_nation_id = pageitems.Attributes["nation_id"].Value;
+						string fields = "";
+						
+						if(pageitems.Attributes["fields"] != null){
+							
+							fields = pageitems.Attributes["fields"].Value;
+						
+						}
+						
+						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
+						
+							log("    > Requested page: "+send_page ); 
 
-					if(pageitems.Attributes["link_page"] != null)
-					{
+							request_page2(
+							
+								send_page, 
+								send_nation_id,
+								fields
+								
+							);
 						
-						obj.transform.Find("Button").GetComponent<Button>().onClick.AddListener( delegate { 
-													
-								// loadpage(pageitems.Attributes["link_page"].Value); 
-									
-								log("    > ********* Clicked to load page: "+pageitems.Attributes["link_page"].Value); 
-	
-							});
+						});
 					
-					}
-					
-					if(pageitems.Attributes["label"] != null)
-					{
-						
-						obj.transform.Find("Button/Label").GetComponent<TextMeshProUGUI>().text = pageitems.Attributes["label"].Value;
-											
-					}else
-					{
-						
-						obj.transform.Find("Button/Label").GetComponent<TextMeshProUGUI>().text = "#error";
-																		
 					}
 					
 					log("    > Page button created"); 
 					
 				}
+				else if(pageitems.Name == "input")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(inputfield, new Vector3(150, -4, 0), Quaternion.identity);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+					};
+					
+					// log("    > ******************* VAI CHAMAR"); 
+										
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						// log("    > ENTROU"); 
+					
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value;
+					
+						// set_value(pageitems.Attributes["id"].Value, pageitems.Attributes["value"].Value);
+						
+					};
+					
+					// log("    > ******************* SAIU"); 
+					
+					
+					log("    > Page Input created"); 
+							
+					
+				}
+				else if(pageitems.Name == "dropdown")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.Attributes["label"].Value);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(dropdown, new Vector3(150, -4, 0), Quaternion.identity);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(300, (float)(40));
+			
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+					};
+						
+					obj1.GetComponent<TMP_Dropdown>().ClearOptions();
+					
+					List<string> drolist = new List<string>();
+					 
+					foreach (XmlNode options in pageitems) {
+						
+						if(options.Name == "option"){
+							
+							drolist.Add( options.InnerText );
+							
+						}
+						
+						
+					} 
+					 
+					obj1.GetComponent<TMP_Dropdown>().AddOptions(drolist);
+					
+					log("    > **************** DROPDOWN VALUE : "+get_option(pageitems.Attributes["id"].Value)); 
+					
+					set_option(pageitems.Attributes["id"].Value, "Hidden");
+					
+					/*
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value;
+					
+						
+					};
+					*/
+					
+					log("    > Page Dropdown created"); 
+							
+					
+				}
+				else if(pageitems.Name == "break")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					obj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(22));
+			
+					log("    > Page break created"); 
+							
+					
+				}
+				else if(pageitems.Name == "line")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					obj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(40));
+			
+					string object_name = "";
+			
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj.name = "page_" + pageitems.Attributes["id"].Value;
+						object_name =  pageitems.Attributes["id"].Value;
+								
+					}
+					else
+					{
+						
+						obj.name = "page_line";
+						object_name =  "page_line";
+						
+												
+					}
+					
+					log("    > Page line created"); 
+					
+					float posx = 10;
+					
+					obj1 = Instantiate(line_background, new Vector3( 10, 40, 0), Quaternion.identity);
+					obj1.SetParent(obj, false);
+					
+					int flag_title = 0;
+					
+					if(pageitems.Attributes["page"] != null)
+					{
+						
+						string send_page = pageitems.Attributes["page"].Value; 
+						string send_nation_id = pageitems.Attributes["nation_id"].Value;
+						string fields = "";
+						
+						if(pageitems.Attributes["fields"] != null){
+							
+							fields = pageitems.Attributes["fields"].Value;
+						
+						}
+						
+						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
+						
+							clicked_id = object_name;
+	
+							log("    > Requested page: "+send_page+ " - clicked_id : "+clicked_id ); 
+							
+							request_page2(
+							
+								send_page, 
+								send_nation_id,
+								fields
+								
+							);
+						
+						});
+					
+					}
+					else
+					{
+						
+						obj1.GetComponent<Image>().color = new Color(0.4061944f, 0.4431966f, 0.5283019f, 1f);
+						
+						flag_title = 1;
+						
+						
+					}
+										
+					foreach (XmlNode parts in pageitems) {
+						
+						
+						log("    > PART: "+parts.Name); 
+						
+						if(parts.Name == "text")
+						{
+							
+							obj2 = Instantiate(label, new Vector3( posx, 0, 0), Quaternion.identity);
+					
+							obj2.SetParent(obj1, false);
+							
+							if(parts.Attributes["align"] != null)
+							{
 				
-				
-				
-				
+								obj2.GetComponent<TextMeshProUGUI>().text = "<align=\""+parts.Attributes["align"].Value+"\">"+format_text(parts.InnerText)+"</align>"; // .Replace("{l}", "<").Replace("{b}", ">");
+					
+								
+							}
+							else
+							{
+								
+								obj2.GetComponent<TextMeshProUGUI>().text = format_text(parts.InnerText); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+							}
+		
+							
+							
+							if(parts.Attributes["size"] != null)
+							{
+								
+								obj2.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(float.Parse(parts.Attributes["size"].Value)), (float)(40));
+								
+								posx += float.Parse(parts.Attributes["size"].Value);
+	 
+							}
+							else
+							{
+								
+								obj2.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(100), (float)(40));
+							
+								posx += 100;
+							}
+							
+							if(flag_title == 1)
+							{
+								
+								obj2.GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 1.0f, 1.0f, 1f); 
+							}
+							
+						}
+						else
+						{
+							
+							error("Warning : part not found: "+parts.Name+"");
+					
+						}
+					
+						obj1.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(posx), (float)(40));
+					
+			
+						
+					}
+					
+					
+										
+				}
+				else
+				{
+					
+					error("Warning : Pageitem not found: "+pageitems.Name+"");
+							
+				}
+						
 			}
-
-			
-			
-			
+		
 		}
 		
 		log("\r\n== END loadpage ==\r\n");
-			
-		
-	
 		
 	}
 
 	// REquest a page from the API
-	public void request_page(string type,string page_id, string nation_id)
+	public void request_page(string type, string page_id, string nation_id)
 	{
 		
 		GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(true);
@@ -846,6 +1119,48 @@ public class Main : MonoBehaviour
 		log("    > Page/Loading set to active");
 	
 		string json = "{\"request\": \"page\",\"token\": \""+token+"\",\"type\": \""+type+"\",\"page\": \""+page_id+"\",\"nation_id\": \""+nation_id+"\"} ";		
+			
+		StartCoroutine(apicom(json));
+				
+	}
+	
+	// Request a page from the API
+	public void request_page2(string page, string nation_id, string fields)
+	{
+		
+		GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(true);
+		log("    > Screens/Page set to active");
+	
+		GameObject.Find("Screens/Page").transform.Find("Loading").gameObject.SetActive(true);
+		log("    > Page/Loading set to active");
+	
+		string fields_list = "";
+	
+		if(fields != ""){
+			
+			string[] Split;			
+						
+			Split = fields.Split(","[0]);
+         
+			for(int i = 0; i < Split.Length; i++){
+				
+				fields_list = fields_list + ",\""+Split[i]+"\": \""+get_value(Split[i])+"\"";
+				
+				log("    > Field: "+Split[i]+" - Value: "+get_value(Split[i]));
+	
+			} 
+			
+		}
+		
+		if(clicked_id != ""){
+			
+			fields_list = fields_list + ",\"clicked_id\": \""+clicked_id+"\"";
+				
+			clicked_id = "";
+			
+		}
+	
+		string json = "{\"request\": \"page2\",\"token\": \""+token+"\",\"page\": \""+page+"\",\"nation_id\": \""+nation_id+"\" "+fields_list+"} ";		
 			
 		StartCoroutine(apicom(json));
 				
@@ -885,7 +1200,7 @@ public class Main : MonoBehaviour
 		
 		// Nation List
 		
-		reader = db.Select("Select * from users_nations WHERE id_user ='" + id_user + "' ");
+		reader = db.Select("Select * from users_nations WHERE id_user ='" + id_user + "' AND ( status = '1' OR status = '3' ) ");
 		
 		while (reader != null && reader.Read())
 		{
@@ -1056,6 +1371,14 @@ public class Main : MonoBehaviour
 							Load_page("temp");
 													
 						}
+						else if(r["request"] == "page2")
+						{
+							
+							savefile("temp", r["content"]);
+							
+							Load_page("temp");
+													
+						}
 						else if(r["request"] == "join_nation")
 						{
 							
@@ -1212,23 +1535,43 @@ public class Main : MonoBehaviour
 						if (reader != null && reader.Read())
 						{
 
-							result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', name='" + r["nation_list"][i]["name"] + "'  WHERE id = '" + reader.GetStringValue("id") + "'");
+							if(r["nation_list"][i]["status"] == "4" || r["nation_list"][i]["status"] == "2" ){
+								
+								result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', name='" + r["nation_list"][i]["name"] + "', status='2'  WHERE id = '" + reader.GetStringValue("id") + "'");
 
-							log("        > UPDATE DB: " + r["nation_list"][i]["name"] + " - Result: " + result );
-					
+								log("        > UPDATE DB: " + r["nation_list"][i]["name"] + " (inactive) - Result: " + result );
+									
+								if(current_nation == r["nation_list"][i]["id_nation"]){
+									
+									current_nation = "0";
+									
+								}
+									
+							}else{
+								
+								result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', status='1', name='" + r["nation_list"][i]["name"] + "'  WHERE id = '" + reader.GetStringValue("id") + "'");
+
+								log("        > UPDATE DB: " + r["nation_list"][i]["name"] + " - Result: " + result );
+													
+							}
+
+							
 						}else{
 							
-							result = db.Insert("INSERT INTO users_nations VALUES ('"+db_lastid("users_nations")+"','"+id_user+"','" + r["nation_list"][i]["id_nation"]  + "','" + r["nation_list"][i]["last_update"]  + "','" + r["nation_list"][i]["name"]  + "') ");
+							if(r["nation_list"][i]["status"] != "4" && r["nation_list"][i]["status"] != "2" ){
+								
+								result = db.Insert("INSERT INTO users_nations VALUES ('"+db_lastid("users_nations")+"','1','"+id_user+"','" + r["nation_list"][i]["id_nation"]  + "','" + r["nation_list"][i]["last_update"]  + "','" + r["nation_list"][i]["name"]  + "') ");
 
-							log("        > INSERT DB: " + r["nation_list"][i]["name"] + " - Result:  " + result );
+								log("        > INSERT DB: " + r["nation_list"][i]["name"] + " - Result:  " + result );
+							
+							}							
 														
 						}
-
+						
 						result = db.Update("UPDATE nations_structure SET status='2' WHERE id_user = '" + id_user + "' AND id_nation = '"+r["nation_list"][i]["id_nation"]+"' ");
 
 						log("        > UPDATE DB: status = 2 on all structure from nation: "+r["nation_list"][i]["id_nation"]+" - Result: " + result );
 				
-					
 					}					
 					
 			}else{
@@ -1533,7 +1876,7 @@ public class Main : MonoBehaviour
         }
 		
 	}
-	
+
 	// Set the value of an input field
 	private void set_value(string target, string data)
 	{
@@ -1553,6 +1896,67 @@ public class Main : MonoBehaviour
 		
 	}
 	
+	// Get the option of a dropdown
+	private string get_option(string target)
+	{
+		
+		try
+        {
+			
+			
+			return GameObject.Find(target).GetComponent<TMP_Dropdown>().options[0].text;
+		
+		}
+        catch (Exception e)
+        {
+            
+			error("Warning : Object not found to get option: "+target+"\r\nRaw Error: "+e+"");
+			return null;
+			
+        }
+		
+	}
+		
+	// Set the option of a dropdown
+	private void set_option(string target, string data)
+	{
+		
+		
+		
+		try
+        {
+			
+			int index = 0;
+			
+			foreach (TMP_Dropdown.OptionData opt in GameObject.Find(target).GetComponent<TMP_Dropdown>().options) 
+			{
+				
+				if(opt.text == data){
+					
+					GameObject.Find(target).GetComponent<TMP_Dropdown>().value = index;
+					
+				}
+				
+				index++;
+				
+			};
+					
+			
+			// GameObject.Find(target).GetComponent<TMP_Dropdown>().value = data;
+			
+        }
+        catch (Exception e)
+        {
+            
+			error("Warning : Object not found to set value: "+target+"\r\nRaw Error: "+e+"");
+			
+        }
+		
+		
+		
+	}
+	
+
 	// Get the value of an input field
 	private void set_text(string target, string text)
 	{
@@ -1591,6 +1995,27 @@ public class Main : MonoBehaviour
         }		
 		
 	}
+	
+	// Get the text from a text area
+	private string format_text(string text)
+	{
+		
+		try
+        {
+			
+			return text.Replace("{l}", "<").Replace("{b}", ">");
+			
+        }
+        catch (Exception e)
+        {
+            
+			error("Warning : Error formating text: "+text+"\r\n"+e+"");
+			return text;
+			
+        }		
+		
+	}
+	
 	
 	// Saves a txt File
 	private void savefile(string name, string text)
@@ -1732,6 +2157,7 @@ public class Main : MonoBehaviour
 			schema = new DBSchema("users_nations");
 
 			schema.AddField("id", SQLiteDB.DB_DataType.DB_INT, 0, false, true, true);
+			schema.AddField("status", SQLiteDB.DB_DataType.DB_VARCHAR, 10, false, false, false);
 			schema.AddField("id_user", SQLiteDB.DB_DataType.DB_VARCHAR, 25, false, false, false);
 			schema.AddField("id_nation", SQLiteDB.DB_DataType.DB_VARCHAR, 25, false, false, false);
 			schema.AddField("last_update", SQLiteDB.DB_DataType.DB_VARCHAR, 25, false, false, false);
