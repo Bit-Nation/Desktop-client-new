@@ -4,6 +4,8 @@
 
 On Bitnation’s Blockchain Jurisdiction you can: * create smart contract agreements through an end-to-end encrypted chat interfce * join, leave and create opt-in nations and communities * buy and sell governance services or products peer-to-peer. Our core technology principles are: * open-source software * blockchain agnostic backend * end-to-end encrypted communications.
 
+Here's the latest updated desktop client [development roadmap](https://steemit.com/bitnation/@bitnation/bitnation-pangea-jurisdiction-desktop-client-roadmap)
+
 # BITNATION-Pangea-Desktop-Unity
 
 * Table of contents
