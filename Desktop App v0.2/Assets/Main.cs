@@ -17,7 +17,7 @@ public class Main : MonoBehaviour
 {
     
 	// app version
-	private string app_version = "1.0";
+	private string app_version = "0.3";
 	
 	// production enviroment : 1 = true / 0 = false (test enviroment)
 	private int production = 0;
@@ -36,6 +36,9 @@ public class Main : MonoBehaviour
 	private string last_update;
 	private string current_nation;
 	private string clicked_id;
+	private string current_chat;
+	private Hashtable vars;
+
 	
 	// PREFABS	
 	public Transform menu_nation;
@@ -49,6 +52,8 @@ public class Main : MonoBehaviour
 	public Transform label;
 	public Transform inputfield;
 	public Transform dropdown;
+	public Transform textarea;
+	public Transform chat_bubble;
 
 	// Start is called before the first frame update
     void Start()
@@ -77,14 +82,27 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
 			log("    > Sidebar/Settings size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta);
 			
+			// Page
+			
 			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-50));
-			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			log("    > Page Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(false);
 			log("    > Page set to inactive");
+
+			// Chat
+
+			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
+			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
+			
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-100));
+			log("    > Chat Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			
+			GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(false);
+			log("    > Chat set to inactive");
 
 			// Application.targetFrameRate = 60;
 			// log("    > FrameRate set to " + Application.targetFrameRate);
@@ -92,6 +110,9 @@ public class Main : MonoBehaviour
 			// QualitySettings.vSyncCount = 0;
 			// log("    > vSyncCount set to " + QualitySettings.vSyncCount);
 	
+			current_nation = "0";
+			log("    > Current Nation set to "+current_nation);
+
 			
 			// MAIN DATABASE
 			
@@ -151,8 +172,14 @@ public class Main : MonoBehaviour
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-50));
-			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			log("    > Page/Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
+			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
+			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
+			
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-100));
+			log("    > Chat/Content size changed to : "+GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta);
+					
 			screen_height = Screen.height;
 			screen_width = Screen.width;
 			
@@ -268,8 +295,6 @@ public class Main : MonoBehaviour
 		
 		
 	}		
-
-
 
 	// Click okay on error message screen
 	public void click_okay()
@@ -537,33 +562,70 @@ public class Main : MonoBehaviour
 			
 		clear("Screens/Sidebar/Menu/Viewport/Content");
 		
-		current_nation = nation;
 		
 		if(nation == ""){
 			
 			reader = db.Select("Select * from users_nations WHERE id_user ='" + id_user + "' LIMIT 1");
+			
 			
 			if(reader != null && reader.Read()){
 				
 				nation = reader.GetStringValue("id_nation");
 				
 				log("        > NATION SET TO: " + nation );
-									
+				
+				
+			}else{
+				
+				log("        > Não achou a nation: " + id_user );
+				
+			
 			}
 									
 		}	
-
+		
+		
+		int flag_nation = 0;
+		
+		if(current_nation != nation){
+			
+			current_nation = nation;
+			
+			flag_nation = 1;
+			
+		}
+		
+		
+		
 		reader = db.Select("Select * from users_nations WHERE id_user ='" + id_user + "' AND id_nation = '"+nation+"' LIMIT 1");
 		
 		// Nation banner on the MENU
 		
 		if(reader != null && reader.Read()){
 			
+			// Set citzen name and id on the sidebar
+			
+			set_text("Screens/Sidebar/User/Text_name", reader.GetStringValue("citzen_name"));
+			
+			if(reader.GetStringValue("citzen_id") == null || reader.GetStringValue("citzen_id") == ""){
+				
+				set_text("Screens/Sidebar/User/Text_citzen_id", "no id created");
+			
+			}else{
+				
+				set_text("Screens/Sidebar/User/Text_citzen_id", reader.GetStringValue("citzen_id")+"@"+reader.GetStringValue("nation_id"));
+			
+			}
+			
+			
+			
+			//// 
+			
 			obj = Instantiate(menu_nation, new Vector3(0, 0, 0), Quaternion.identity);
 				
 			obj.SetParent(GameObject.Find("Screens/Sidebar/Menu/Viewport/Content").gameObject.transform, false);
 
-			obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = reader.GetStringValue("name");
+			obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = reader.GetStringValue("nation_name");
 		
 			obj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(80));
 			
@@ -573,7 +635,10 @@ public class Main : MonoBehaviour
 				
 					delegate{ 
 					
-								request_page("0","",nation_banner); 
+								request_page2("frontpage", nation_banner, "");
+								
+								/* request_page("0","",nation_banner); */
+								
 								log("        > Clicked on nation banner id: " + nation_banner );
 								
 							}
@@ -597,7 +662,7 @@ public class Main : MonoBehaviour
 		while (reader != null && reader.Read())
 		{
 		
-			log("        > MENU LOADED: " + reader.GetStringValue("menu_name") + " - " + reader.GetStringValue("menu_icon") );
+			log("        > MENU LOADED: " + reader.GetStringValue("menu_name") + " - " + reader.GetStringValue("menu_order") );
 			
 			if(reader.GetStringValue("menu_type") == "1"){
 				
@@ -606,17 +671,46 @@ public class Main : MonoBehaviour
 				string menu_type_id = reader.GetStringValue("menu_type_id");
 				string nation_id = reader.GetStringValue("id_nation");
 				
+				string nation_banner = nation;
 				
-				obj.transform.GetComponent<Button>().onClick.AddListener( 
-				
-					delegate{ 
+				if(menu_type_id == "1" ){
 					
-								request_page("2",menu_type_id,nation_id); 
-								log("        > Clicked on main id: " + menu_type_id );
+					obj.transform.GetComponent<Button>().onClick.AddListener( 
+					
+						delegate{ 
+						
+									request_page2("main_page"+menu_type_id, nation_id, "");
+									
+						
+									/* request_page("2",menu_type_id,nation_id); */
+									
+									log("        > Clicked on main id: " + menu_type_id );
+									
+								}
 								
-							}
-							
-				);
+					);
+					
+				}else{
+					
+					obj.transform.GetComponent<Button>().onClick.AddListener( 
+					
+						delegate{ 
+						
+									request_page2("main_page"+menu_type_id, nation_id, "");
+									
+						
+									/* request_page("2",menu_type_id,nation_id); */
+									
+									log("        > Clicked on main id: " + menu_type_id );
+									
+								}
+								
+					);
+					
+					
+				}
+			
+				
 				
 			
 			}
@@ -659,6 +753,8 @@ public class Main : MonoBehaviour
 								// request_chat(menu_type_id); 
 								log("        > Clicked on chat id: " + menu_type_id );
 								
+								request_chat(menu_type_id);
+								
 							}
 							
 				);
@@ -686,7 +782,12 @@ public class Main : MonoBehaviour
 								
 		
 		// Request the main nation Page
-		request_page("0","0",nation);
+		
+		if(flag_nation == 1){
+			
+			request_page2("frontpage",nation,"");
+		
+		}		
 		
 	}
 
@@ -729,6 +830,8 @@ public class Main : MonoBehaviour
 		Transform obj2;
 		Texture2D texture;
 		string first_field = ""; // used to give focus to the first input field created
+		vars = new Hashtable();
+
 		
 		XmlNodeList pagelist = xmlDoc.GetElementsByTagName("page");
 		
@@ -750,7 +853,8 @@ public class Main : MonoBehaviour
 			}
 			
 			clear("Screens/Page/Content/Viewport/Content");
-						
+			
+			
 			XmlNodeList pagecontent = pageinfo.ChildNodes;
 			
 			Transform parent = GameObject.Find("Screens/Page/Content/Viewport/Content").gameObject.transform;
@@ -847,6 +951,8 @@ public class Main : MonoBehaviour
 					
 					obj1 = Instantiate(inputfield, new Vector3(150, -4, 0), Quaternion.identity);
 					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(400, (float)(40));
+			
 					obj1.SetParent(obj.transform, false);
 					
 					
@@ -855,6 +961,13 @@ public class Main : MonoBehaviour
 					{
 						
 						obj1.name = pageitems.Attributes["id"].Value;
+						
+						if(first_field == ""){
+							
+							first_field = pageitems.Attributes["id"].Value;
+							
+						}
+						
 					};
 					
 					// log("    > ******************* VAI CHAMAR"); 
@@ -877,6 +990,70 @@ public class Main : MonoBehaviour
 							
 					
 				}
+				else if(pageitems.Name == "textarea")
+				{
+					
+					float textarea_width = 400;
+					float textarea_height = 120;
+					
+					if(pageitems.Attributes["width"] != null)
+					{
+						
+						textarea_width = float.Parse(pageitems.Attributes["width"].Value);
+						
+					}
+					
+					if(pageitems.Attributes["height"] != null)
+					{
+						
+						textarea_height = float.Parse(pageitems.Attributes["width"].Value);
+						
+					}
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+										
+					obj.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(0), (float)(textarea_height+10));
+							
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(textarea, new Vector3(150, (float)(textarea_height+4), 0), Quaternion.identity);
+					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(textarea_width), (float)(textarea_height));
+			
+					obj1.SetParent(obj.transform, false);
+					
+					
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+						
+						if(first_field == ""){
+							
+							first_field = pageitems.Attributes["id"].Value;
+							
+						}
+						
+					};
+					
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value.Replace("{l}", "<").Replace("{b}", ">").Replace("{a}", "\"");
+					
+					};
+					
+					log("    > Page textarea created"); 
+							
+					
+				}
 				else if(pageitems.Name == "dropdown")
 				{
 					
@@ -894,7 +1071,7 @@ public class Main : MonoBehaviour
 					
 					obj1.SetParent(obj.transform, false);
 					
-					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(300, (float)(40));
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(400, (float)(40));
 			
 					
 					if(pageitems.Attributes["id"] != null)
@@ -922,7 +1099,14 @@ public class Main : MonoBehaviour
 					
 					log("    > **************** DROPDOWN VALUE : "+get_option(pageitems.Attributes["id"].Value)); 
 					
-					set_option(pageitems.Attributes["id"].Value, "Hidden");
+					// set_option(pageitems.Attributes["id"].Value, "Hidden");
+					
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						set_option(pageitems.Attributes["id"].Value, pageitems.Attributes["value"].Value);
+						
+					};
 					
 					/*
 					if(pageitems.Attributes["value"] != null)
@@ -989,7 +1173,7 @@ public class Main : MonoBehaviour
 					if(pageitems.Attributes["page"] != null)
 					{
 						
-						string send_page = pageitems.Attributes["page"].Value; 
+						string send_page = pageitems.Attributes["page"].Value;
 						string send_nation_id = pageitems.Attributes["nation_id"].Value;
 						string fields = "";
 						
@@ -1093,6 +1277,17 @@ public class Main : MonoBehaviour
 					
 										
 				}
+				else if(pageitems.Name == "var")
+				{
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						vars.Add(pageitems.Attributes["id"].Value, pageitems.InnerText);
+								
+					}
+										
+				}
 				else
 				{
 					
@@ -1101,6 +1296,16 @@ public class Main : MonoBehaviour
 				}
 						
 			}
+			
+			
+			if(first_field != ""){
+				
+				focus(first_field);	
+
+				log("    > First field focus: "+first_field); 	
+
+			}
+			
 		
 		}
 		
@@ -1108,16 +1313,582 @@ public class Main : MonoBehaviour
 		
 	}
 
+	// Load the contents of a given page
+	public void Load_page2(string name)
+	{
+			
+		log("== INIT loadpage 2 ==\r\n");
+			
+			GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(false);
+			log("    > Screens/Chat set to inactive");
+			
+			current_chat = "";
+		
+			GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(true);
+			log("    > Screens/Page set to active");
+		
+			GameObject.Find("Screens/Page").transform.Find("Loading").gameObject.SetActive(false);
+			log("    > Page/Loading set to inactive");
+			
+			log("    > Page name: " + name);
+
+			XmlDocument xmlDoc = new XmlDocument(); 
+					
+			
+			try
+			{
+				
+				xmlDoc.Load( Application.persistentDataPath + "/"+name+".txt" ); 
+						
+			}
+			catch (Exception e)
+			{
+				
+				log("\r\n**********\r\n ERROR : File not found. ("+name+")\r\n**********\r\n");
+			
+				// return null;
+			
+				// return;
+				// break;
+			
+			}
+			
+			
+			// variables used in the page load
+		
+		Transform obj;
+		Transform obj1;
+		Transform obj2;
+		Texture2D texture;
+		string first_field = ""; // used to give focus to the first input field created
+		vars = new Hashtable();
+
+		
+		XmlNodeList pagelist = xmlDoc.GetElementsByTagName("page");
+		
+		foreach (XmlNode pageinfo in pagelist) {
+			
+			if(pageinfo.Attributes["title"] != null){
+			
+				set_text("Screens/Page/Title/Text", pageinfo.Attributes["title"].Value);
+				
+				log("    > Page title set to: "+get_text("Screens/Page/Title/Text")); 
+
+				
+			}else{
+				
+				set_text("Screens/Page/Title/Text", "#error");
+				
+				error("WARNING : Page title not found. (page:"+name+")");
+		
+			}
+			
+			clear("Screens/Page/Content/Viewport/Content");
+			
+			
+			XmlNodeList pagecontent = pageinfo.ChildNodes;
+			
+			Transform parent = GameObject.Find("Screens/Page/Content/Viewport/Content").gameObject.transform;
+			
+			foreach (XmlNode pageitems in pagecontent) {
+								
+				// log(" PAGE :::::: Child name: "+pageitems.Name+" - id : "+pageitems.Attributes["id"].Value+" ");
+				
+				
+				
+				if(pageitems.Name == "text")
+				{
+					
+					obj = Instantiate(paragraph, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+
+					// change thte text
+
+					obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText); // .Replace("{l}", "<").Replace("{b}", ">");
+										
+					// Change the name of the text for reference
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj.name = "page_" + pageitems.Attributes["id"].Value;
+											
+					}else
+					{
+						
+						obj.name = "page_text";
+												
+					}
+					
+					log("    > Page text created"); 
+
+					
+				}
+				else if(pageitems.Name == "button")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(button, new Vector3(10, -4, 0), Quaternion.identity);
+					obj1.SetParent(obj.transform, false);
+					obj1.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					string object_name = "";
+			
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						object_name = pageitems.Attributes["id"].Value;
+						
+						
+					}
+				
+					
+					if(pageitems.Attributes["page"] != null)
+					{
+						
+						string send_page = pageitems.Attributes["page"].Value; 
+						string send_nation_id = current_nation;
+						string fields = "";
+						
+						if(pageitems.Attributes["fields"] != null){
+							
+							fields = pageitems.Attributes["fields"].Value;
+						
+						}
+						
+						if(pageitems.Attributes["fields"] != null){
+							
+							fields = pageitems.Attributes["fields"].Value;
+						
+						}
+						
+						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
+						
+						
+						
+							clicked_id = object_name;
+						
+							log("    > Requested page: "+send_page ); 
+
+							request_page2(
+							
+								send_page, 
+								send_nation_id,
+								fields
+								
+							);
+						
+						});
+					
+					}
+					
+					log("    > Page button created"); 
+					
+				}
+				else if(pageitems.Name == "input")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(inputfield, new Vector3(150, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(400, (float)(40));
+			
+					obj1.SetParent(obj.transform, false);
+					
+					
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						log("    > ******************* ID : "+pageitems.Attributes["id"].Value); 
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+						
+						if(first_field == ""){
+							
+							first_field = pageitems.Attributes["id"].Value;
+							
+						}
+						
+					}else{
+						
+						log("    > ******************* CADE O ID?"); 
+						
+					};
+					
+					// log("    > ******************* VAI CHAMAR"); 
+										
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						// log("    > ENTROU"); 
+					
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value;
+					
+						// set_value(pageitems.Attributes["id"].Value, pageitems.Attributes["value"].Value);
+						
+					};
+					
+					// log("    > ******************* SAIU"); 
+					
+					
+					log("    > Page Input created"); 
+							
+					
+				}
+				else if(pageitems.Name == "textarea")
+				{
+					
+					float textarea_width = 400;
+					float textarea_height = 120;
+					
+					if(pageitems.Attributes["width"] != null)
+					{
+						
+						textarea_width = float.Parse(pageitems.Attributes["width"].Value);
+						
+					}
+					
+					if(pageitems.Attributes["height"] != null)
+					{
+						
+						textarea_height = float.Parse(pageitems.Attributes["width"].Value);
+						
+					}
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+										
+					obj.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(0), (float)(textarea_height+10));
+							
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(textarea, new Vector3(150, (float)(textarea_height+4), 0), Quaternion.identity);
+					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(textarea_width), (float)(textarea_height));
+			
+					obj1.SetParent(obj.transform, false);
+					
+					
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+						
+						if(first_field == ""){
+							
+							first_field = pageitems.Attributes["id"].Value;
+							
+						}
+						
+					};
+					
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value.Replace("{l}", "<").Replace("{b}", ">").Replace("{a}", "\"");
+					
+					};
+					
+					log("    > Page textarea created"); 
+							
+					
+				}
+				else if(pageitems.Name == "dropdown")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.Attributes["label"].Value);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(dropdown, new Vector3(150, -4, 0), Quaternion.identity);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(400, (float)(40));
+			
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+						
+					};
+						
+					obj1.GetComponent<TMP_Dropdown>().ClearOptions();
+					
+					List<string> drolist = new List<string>();
+					 
+					foreach (XmlNode options in pageitems) {
+						
+						if(options.Name == "option"){
+							
+							drolist.Add( options.InnerText );
+							
+						}
+						
+						
+					} 
+					 
+					obj1.GetComponent<TMP_Dropdown>().AddOptions(drolist);
+					
+					log("    > **************** DROPDOWN VALUE : "+get_option(pageitems.Attributes["id"].Value)); 
+					
+					// set_option(pageitems.Attributes["id"].Value, "Hidden");
+					
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						set_option(pageitems.Attributes["id"].Value, pageitems.Attributes["value"].Value);
+						
+					};
+					
+					/*
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value;
+					
+						
+					};
+					*/
+					
+					log("    > Page Dropdown created"); 
+							
+					
+				}
+				else if(pageitems.Name == "break")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					obj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(22));
+			
+					log("    > Page break created"); 
+							
+					
+				}
+				else if(pageitems.Name == "line")
+				{
+					
+					obj = Instantiate(line, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					obj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(40));
+			
+					string object_name = "";
+			
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						obj.name = "page_" + pageitems.Attributes["id"].Value;
+						object_name =  pageitems.Attributes["id"].Value;
+								
+					}
+					else
+					{
+						
+						obj.name = "page_line";
+						object_name =  "page_line";
+						
+												
+					}
+					
+					log("    > Page line created"); 
+					
+					float posx = 10;
+					
+					obj1 = Instantiate(line_background, new Vector3( 10, 40, 0), Quaternion.identity);
+					obj1.SetParent(obj, false);
+					
+					int flag_title = 0;
+					
+					if(pageitems.Attributes["page"] != null)
+					{
+						
+						string send_page = pageitems.Attributes["page"].Value;
+						string send_nation_id = pageitems.Attributes["nation_id"].Value;
+						string fields = "";
+						
+						if(pageitems.Attributes["fields"] != null){
+							
+							fields = pageitems.Attributes["fields"].Value;
+						
+						}
+						
+						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
+						
+							clicked_id = object_name;
+	
+							log("    > Requested page: "+send_page+ " - clicked_id : "+clicked_id ); 
+							
+							request_page2(
+							
+								send_page, 
+								send_nation_id,
+								fields
+								
+							);
+						
+						});
+					
+					}
+					else
+					{
+						
+						obj1.GetComponent<Image>().color = new Color(0.4061944f, 0.4431966f, 0.5283019f, 1f);
+						
+						flag_title = 1;
+						
+						
+					}
+										
+					foreach (XmlNode parts in pageitems) {
+						
+						
+						log("    > PART: "+parts.Name); 
+						
+						if(parts.Name == "text")
+						{
+							
+							obj2 = Instantiate(label, new Vector3( posx, 0, 0), Quaternion.identity);
+					
+							obj2.SetParent(obj1, false);
+							
+							if(parts.Attributes["align"] != null)
+							{
+				
+								obj2.GetComponent<TextMeshProUGUI>().text = "<align=\""+parts.Attributes["align"].Value+"\">"+format_text(parts.InnerText)+"</align>"; // .Replace("{l}", "<").Replace("{b}", ">");
+					
+								
+							}
+							else
+							{
+								
+								obj2.GetComponent<TextMeshProUGUI>().text = format_text(parts.InnerText); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+							}
+		
+							
+							
+							if(parts.Attributes["size"] != null)
+							{
+								
+								obj2.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(float.Parse(parts.Attributes["size"].Value)), (float)(40));
+								
+								posx += float.Parse(parts.Attributes["size"].Value);
+	 
+							}
+							else
+							{
+								
+								obj2.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(100), (float)(40));
+							
+								posx += 100;
+							}
+							
+							if(flag_title == 1)
+							{
+								
+								obj2.GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 1.0f, 1.0f, 1f); 
+							}
+							
+						}
+						else
+						{
+							
+							error("Warning : part not found: "+parts.Name+"");
+					
+						}
+					
+						obj1.GetComponent<RectTransform>().sizeDelta = new Vector2((float)(posx), (float)(40));
+					
+			
+						
+					}
+					
+					
+										
+				}
+				else if(pageitems.Name == "var")
+				{
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						vars.Add(pageitems.Attributes["id"].Value, pageitems.InnerText);
+								
+					}
+										
+				}
+				else
+				{
+					
+					error("Warning : Pageitem not found: "+pageitems.Name+"");
+							
+				}
+						
+			}
+			
+			
+			if(first_field != ""){
+				
+				focus(first_field);	
+
+				log("    > First field focus: "+first_field); 	
+
+			}
+			
+		
+		}
+		
+		log("\r\n== END loadpage ==\r\n");
+		
+		// return null;
+			
+	}
+
 	// REquest a page from the API
 	public void request_page(string type, string page_id, string nation_id)
 	{
 		
+		GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(false);
+		log("    > Screens/Chat set to inactive");
+	
 		GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(true);
 		log("    > Screens/Page set to active");
 	
 		GameObject.Find("Screens/Page").transform.Find("Loading").gameObject.SetActive(true);
 		log("    > Page/Loading set to active");
 	
+		clear("Screens/Page/Content/Viewport/Content");
+				
 		string json = "{\"request\": \"page\",\"token\": \""+token+"\",\"type\": \""+type+"\",\"page\": \""+page_id+"\",\"nation_id\": \""+nation_id+"\"} ";		
 			
 		StartCoroutine(apicom(json));
@@ -1128,12 +1899,16 @@ public class Main : MonoBehaviour
 	public void request_page2(string page, string nation_id, string fields)
 	{
 		
+		GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(false);
+		log("    > Screens/Chat set to inactive");
+	
 		GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(true);
 		log("    > Screens/Page set to active");
 	
 		GameObject.Find("Screens/Page").transform.Find("Loading").gameObject.SetActive(true);
 		log("    > Page/Loading set to active");
 	
+			
 		string fields_list = "";
 	
 		if(fields != ""){
@@ -1144,10 +1919,28 @@ public class Main : MonoBehaviour
          
 			for(int i = 0; i < Split.Length; i++){
 				
-				fields_list = fields_list + ",\""+Split[i]+"\": \""+get_value(Split[i])+"\"";
-				
-				log("    > Field: "+Split[i]+" - Value: "+get_value(Split[i]));
+				if(get_value(Split[i]) != null){
+					
+					fields_list = fields_list + ",\""+Split[i]+"\": \""+get_value(Split[i])+"\"";
+					log("    > Field: "+Split[i]+" - Value: "+get_value(Split[i]));
 	
+				}else{
+					
+					if(get_option(Split[i]) != null){
+						
+						fields_list = fields_list + ",\""+Split[i]+"\": \""+get_option(Split[i])+"\"";
+						log("    > Field: "+Split[i]+" - Option: "+get_value(Split[i]));
+							
+					}else{
+						
+						fields_list = fields_list + ",\""+Split[i]+"\": \""+vars[Split[i]]+"\"";
+						log("    > Field: "+Split[i]+" - VAR: "+vars[Split[i]]);
+										
+					}					
+					
+				}
+				
+				
 			} 
 			
 		}
@@ -1159,6 +1952,9 @@ public class Main : MonoBehaviour
 			clicked_id = "";
 			
 		}
+		
+		clear("Screens/Page/Content/Viewport/Content");
+		
 	
 		string json = "{\"request\": \"page2\",\"token\": \""+token+"\",\"page\": \""+page+"\",\"nation_id\": \""+nation_id+"\" "+fields_list+"} ";		
 			
@@ -1205,7 +2001,7 @@ public class Main : MonoBehaviour
 		while (reader != null && reader.Read())
 		{
 		
-			log("        > Nation loaded: " + reader.GetStringValue("name")+" - ID: "+reader.GetStringValue("id") );
+			log("        > Nation loaded: " + reader.GetStringValue("nation_name")+" - ID: "+reader.GetStringValue("id") );
 			
 			string id_nation = "";
 					
@@ -1217,7 +2013,7 @@ public class Main : MonoBehaviour
 			
 			obj.SetParent(GameObject.Find("Screens/Sidebar/Nations/Viewport/Content").gameObject.transform, false);
 
-			obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = reader.GetStringValue("name");
+			obj.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = reader.GetStringValue("nation_name");
 			
 			obj.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(60));
 		
@@ -1239,6 +2035,118 @@ public class Main : MonoBehaviour
 		
 		log("\r\n    == END update_response ==\r\n");
 					
+	}
+		
+	private void request_chat(string id_chat_room)
+	{
+		
+		log("\r\n    == INIT request_chat ==\r\n");
+		
+			GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(false);
+			log("    > Screens/Page set to inactive");
+			
+			GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(true);
+			log("    > Screens/Chat set to active");
+		
+			GameObject.Find("Screens/Chat").transform.Find("Loading").gameObject.SetActive(true);
+			log("    > Chat/Loading set to active");
+		
+			clear("Screens/Chat/Content/Viewport/Content");
+					
+			string json = "{\"request\": \"request_chat\",\"token\": \""+token+"\",\"id_chat_room\": \""+id_chat_room+"\" } ";		
+				
+			StartCoroutine(apicom(json));
+			
+		log("\r\n    == END request_chat ==\r\n");
+			
+		
+	}
+	
+	private void Load_chat(SimpleJSON.JSONNode r){
+		
+		log("\r\n    == INIT Load_chat ==\r\n");
+		
+			GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(false);
+			log("    > Screens/Page set to inactive");
+			
+			GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(true);
+			log("    > Screens/Chat set to active");
+		
+			GameObject.Find("Screens/Chat").transform.Find("Loading").gameObject.SetActive(false);
+			log("    > Chat/Loading set to active");
+			
+			clear("Screens/Chat/Content/Viewport/Content");
+			
+			// Set name
+			
+			set_text("Screens/Chat/Title/Text", r["room_name"]);
+				
+			log("    > Chat title set to: "+get_text("Screens/Chat/Title/Text")); 
+
+			current_chat = r["id_chat_room"];
+			
+			/// 
+			
+			int i = 0;
+			
+			System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+					
+			if(r["messages"] != null){
+				
+				Transform parent = GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform;
+				
+				Transform obj;
+				
+				// for(i = 0; i < r["messages"].Count; i++){
+				for(i = r["messages"].Count; i > 0 ; i--){
+						
+					
+					
+					// log("        > CHAT: " + r["messages"][(i-1)]["message"] );
+					
+					obj = Instantiate(chat_bubble, new Vector3(0, 0, 0), Quaternion.identity);
+					obj.SetParent(parent, false);
+			
+					obj.transform.Find("Text_message").GetComponent<TextMeshProUGUI>().text = format_text(r["messages"][(i-1)]["message"]);
+					
+					obj.transform.Find("Text_citzen_name").GetComponent<TextMeshProUGUI>().text = format_text(r["messages"][(i-1)]["citzen_name"]);
+					
+					
+					dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+					dtDateTime = dtDateTime.AddSeconds( int.Parse(r["messages"][(i-1)]["date_sent"]) ).ToLocalTime();
+					// return dtDateTime;
+					
+					obj.transform.Find("Text_date").GetComponent<TextMeshProUGUI>().text = " "+dtDateTime;
+									
+									
+				
+				}					
+				
+			}
+		
+		log("\r\n    == END Load_chat ==\r\n");
+		
+		
+		
+	}
+	
+	public void send_chat(){
+				
+		// Input_send
+		
+		// get_value(Input_send);
+		
+		log("\r\n    == INIT send_chat ==\r\n");
+				
+			string json = "{\"request\": \"send_chat\",\"token\": \""+token+"\",\"id_chat_room\": \""+current_chat+"\",\"message\": \""+get_value("Input_send")+"\" } ";		
+				
+			StartCoroutine(apicom(json));
+		
+			set_value("Input_send", "");
+		
+		log("\r\n    == END send_chat ==\r\n");
+		
+		
 	}
 	
 	// ***********************************
@@ -1357,6 +2265,13 @@ public class Main : MonoBehaviour
 							message("error", "New user sucessfully created!");
 													
 						}
+						else if(r["request"] == "retrieve")
+						{
+							
+							message("error", "In a few moments you will receive an email with your new password.");
+							
+													
+						}
 						else if(r["request"] == "update")
 						{
 							
@@ -1368,7 +2283,13 @@ public class Main : MonoBehaviour
 							
 							savefile("temp", r["content"]);
 							
-							Load_page("temp");
+							// Load_page("temp");
+							
+							// StartCoroutine(Load_page2("temp"));
+							
+							Load_page2("temp");
+							
+							
 													
 						}
 						else if(r["request"] == "page2")
@@ -1376,8 +2297,26 @@ public class Main : MonoBehaviour
 							
 							savefile("temp", r["content"]);
 							
-							Load_page("temp");
-													
+							// Load_page("temp");
+							// StartCoroutine(Load_page2("temp"));
+							
+							Load_page2("temp");
+									
+						}
+						else if(r["request"] == "request_chat")
+						{
+							
+							// savefile("chat", r["content"]);
+							
+							Load_chat(r);
+									
+						}
+						else if(r["request"] == "send_chat")
+						{
+							
+							update_request();
+							
+							
 						}
 						else if(r["request"] == "join_nation")
 						{
@@ -1524,9 +2463,18 @@ public class Main : MonoBehaviour
 						
 						log("        > NATION : " + r["nation_list"][i]["name"] );
 					
-						if(current_nation == r["nation_list"][i]["id_nation"]){
+						if(current_nation == r["nation_list"][i]["id_nation"] ){
 							
 							flag_menu = 1;
+							
+							error(" CURRENT NATION!!! ");
+					
+							
+						}else{
+						
+							
+							error(" NOT SAME NATION -"+current_nation+"-"+r["nation_list"][i]["id_nation"]+"-!!! ");
+					
 							
 						}
 						
@@ -1537,7 +2485,7 @@ public class Main : MonoBehaviour
 
 							if(r["nation_list"][i]["status"] == "4" || r["nation_list"][i]["status"] == "2" ){
 								
-								result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', name='" + r["nation_list"][i]["name"] + "', status='2'  WHERE id = '" + reader.GetStringValue("id") + "'");
+								result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', nation_name='" + r["nation_list"][i]["nation_name"] + "',nation_id='" + r["nation_list"][i]["nation_id"] + "', status='2',citzen_id='" + r["nation_list"][i]["citzen_id"]  + "',citzen_name='" + r["nation_list"][i]["citzen_name"]  + "'  WHERE id = '" + reader.GetStringValue("id") + "'");
 
 								log("        > UPDATE DB: " + r["nation_list"][i]["name"] + " (inactive) - Result: " + result );
 									
@@ -1549,7 +2497,7 @@ public class Main : MonoBehaviour
 									
 							}else{
 								
-								result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', status='1', name='" + r["nation_list"][i]["name"] + "'  WHERE id = '" + reader.GetStringValue("id") + "'");
+								result = db.Update("UPDATE users_nations SET last_update='" + r["nation_list"][i]["last_update"] + "', status='1', nation_name='" + r["nation_list"][i]["nation_name"] + "',nation_id='" + r["nation_list"][i]["nation_id"] + "',citzen_id='" + r["nation_list"][i]["citzen_id"]  + "',citzen_name='" + r["nation_list"][i]["citzen_name"]  + "'  WHERE id = '" + reader.GetStringValue("id") + "'");
 
 								log("        > UPDATE DB: " + r["nation_list"][i]["name"] + " - Result: " + result );
 													
@@ -1560,7 +2508,7 @@ public class Main : MonoBehaviour
 							
 							if(r["nation_list"][i]["status"] != "4" && r["nation_list"][i]["status"] != "2" ){
 								
-								result = db.Insert("INSERT INTO users_nations VALUES ('"+db_lastid("users_nations")+"','1','"+id_user+"','" + r["nation_list"][i]["id_nation"]  + "','" + r["nation_list"][i]["last_update"]  + "','" + r["nation_list"][i]["name"]  + "') ");
+								result = db.Insert("INSERT INTO users_nations VALUES ('"+db_lastid("users_nations")+"','1','"+id_user+"','" + r["nation_list"][i]["id_nation"]  + "','" + r["nation_list"][i]["last_update"]  + "','" + r["nation_list"][i]["nation_name"]  + "','" + r["nation_list"][i]["nation_id"]  + "','" + r["nation_list"][i]["citzen_name"]  + "','" + r["nation_list"][i]["citzen_id"]  + "') ");
 
 								log("        > INSERT DB: " + r["nation_list"][i]["name"] + " - Result:  " + result );
 							
@@ -1628,17 +2576,63 @@ public class Main : MonoBehaviour
 				
 			}
 			
-			if(flag_menu == 1){
+			if(flag_menu == 1 || current_nation == "0"){
+				
+				error(" LOAD MENU called!!!! -"+current_nation+"-"+r["nation_list"][i]["id_nation"]+"-!!! ");
+					
 				
 				Load_menu("");	
 				
 			}
 			
-			if(flag_nation == 1){
+			if(flag_nation == 1  || current_nation == "0"){
 				
 				Load_nations();
 				
 			}
+			
+			
+			
+			if(r["current_chat"] == current_chat){
+				
+				if(r["messages"] != null){
+					
+					log("\r\n    == INIT update chat ==\r\n");
+	
+					System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+				
+					Transform parent = GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform;
+				
+					Transform obj;
+						
+					for(i = r["messages"].Count; i > 0 ; i--){
+						
+						
+							obj = Instantiate(chat_bubble, new Vector3(0, 0, 0), Quaternion.identity);
+							obj.SetParent(parent, false);
+					
+							obj.transform.Find("Text_message").GetComponent<TextMeshProUGUI>().text = format_text(r["messages"][(i-1)]["message"]);
+							
+							obj.transform.Find("Text_citzen_name").GetComponent<TextMeshProUGUI>().text = format_text(r["messages"][(i-1)]["citzen_name"]);
+							
+							
+							dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+							dtDateTime = dtDateTime.AddSeconds( int.Parse(r["messages"][(i-1)]["date_sent"]) ).ToLocalTime();
+							// return dtDateTime;
+							
+							obj.transform.Find("Text_date").GetComponent<TextMeshProUGUI>().text = " "+dtDateTime;
+												
+					}
+
+					log("\r\n    == END update chat ==\r\n");					
+					
+				}				
+				
+			}
+			
+			
+			
+			
 			
 			message("hide", "");
 		
@@ -1687,6 +2681,11 @@ public class Main : MonoBehaviour
 		log("\r\n    == END update_response ==\r\n");
 		
 	}
+	
+	
+	
+	
+	
 
 	private void join_nation_response(SimpleJSON.JSONNode r)
 	{
@@ -1831,7 +2830,53 @@ public class Main : MonoBehaviour
 		log("\r\n    == END join_nation_response ==\r\n");
 		
 	}
-						
+		
+	public void update_request()
+	{
+		
+		log("\r\n    == INIT update ==\r\n");
+		
+			
+			DBReader reader = db.Select("Select * from users WHERE id_user ='" + id_user + "' LIMIT 1");
+			
+			last_update = "0";
+			
+			if (reader != null && reader.Read())
+			{
+
+				last_update = reader.GetStringValue("last_update");
+
+			}else{
+				
+				int result = db.Insert("INSERT INTO users VALUES ('"+db_lastid("users")+"','"+id_user+"','0') ");
+
+				log("        > INSERT DB users: "+id_user+" - Result:  " + result );
+				
+				
+			}
+			
+			log("    > last_update set to : "+last_update);
+		
+			// message("loading", "Updating information ...");
+			
+			string chat_json = "";
+			
+			if(current_chat != ""){
+				
+				chat_json = ",\"current_chat\": \""+current_chat+"\"";
+				
+			}			
+		
+			string json = "{\"request\": \"update\",\"token\": \""+token+"\",\"last_update\": \""+last_update+"\""+chat_json+"} ";		
+				
+			StartCoroutine(apicom(json));
+			
+		
+		log("\r\n    == END update_response ==\r\n");
+		
+	}
+
+		
 	// ***********************************
 	// 		Support Functions
 	// ***********************************
@@ -1864,7 +2909,7 @@ public class Main : MonoBehaviour
 		try
         {
 			
-			return GameObject.Find(target).GetComponent<TMP_InputField>().text;
+			return GameObject.Find(target).GetComponent<TMP_InputField>().text.Replace("<", "{l}").Replace(">", "{b}").Replace("\"", "{a}");
 		
         }
         catch (Exception e)
@@ -1884,7 +2929,7 @@ public class Main : MonoBehaviour
 		try
         {
 			
-			GameObject.Find(target).GetComponent<TMP_InputField>().text = data;
+			GameObject.Find(target).GetComponent<TMP_InputField>().text = data.Replace("{l}", "<").Replace("{b}", ">").Replace("{a}", "\"");
 			
         }
         catch (Exception e)
@@ -1904,7 +2949,7 @@ public class Main : MonoBehaviour
         {
 			
 			
-			return GameObject.Find(target).GetComponent<TMP_Dropdown>().options[0].text;
+			return GameObject.Find(target).GetComponent<TMP_Dropdown>().options[GameObject.Find(target).GetComponent<TMP_Dropdown>().value].text;
 		
 		}
         catch (Exception e)
@@ -2016,7 +3061,6 @@ public class Main : MonoBehaviour
 		
 	}
 	
-	
 	// Saves a txt File
 	private void savefile(string name, string text)
 	{
@@ -2068,12 +3112,57 @@ public class Main : MonoBehaviour
 			
 		if(GameObject.Find(target).gameObject.transform != null){
 			
-			Transform obj = GameObject.Find(target).gameObject.transform;
+			/*
+			int i = 0;
+			
+			Transform transform = GameObject.Find(target).gameObject.transform;
 
-			foreach (Transform child in obj)
+			GameObject[] allChildren = new GameObject[transform.childCount];
+
+			//Find all child obj and store to that array
+			foreach (Transform child in transform)
 			{
-				GameObject.Destroy(child.gameObject);
+				allChildren[i] = child.gameObject;
+				i += 1;
 			}
+
+			//Now destroy them
+			foreach (GameObject child in allChildren)
+			{
+				DestroyImmediate(child.gameObject);
+			}
+			*/
+
+				Transform parent = GameObject.Find(target).gameObject.transform;
+			
+			    var tempArray = new GameObject[parent.childCount];
+
+				for(int i = 0; i < tempArray.Length; i++)
+				{
+					tempArray[i] = parent.GetChild(i).gameObject;
+				}
+
+				foreach(GameObject child in tempArray)
+				{
+					DestroyImmediate(child);
+				}
+			
+			
+			
+			
+			/*
+			
+			// obj     Transform obj = GameObject.Find(target).gameObject.transform;
+
+			foreach (Transform child in GameObject.Find(target).gameObject.transform )
+			{
+				// GameObject.Destroy(child.gameObject);
+				
+				GameObject.DestroyImmediate(child.gameObject);
+				
+			}
+			
+			*/
 			
 		}
 		else
@@ -2161,7 +3250,10 @@ public class Main : MonoBehaviour
 			schema.AddField("id_user", SQLiteDB.DB_DataType.DB_VARCHAR, 25, false, false, false);
 			schema.AddField("id_nation", SQLiteDB.DB_DataType.DB_VARCHAR, 25, false, false, false);
 			schema.AddField("last_update", SQLiteDB.DB_DataType.DB_VARCHAR, 25, false, false, false);
-			schema.AddField("name", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
+			schema.AddField("nation_name", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
+			schema.AddField("nation_id", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
+			schema.AddField("citzen_name", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
+			schema.AddField("citzen_id", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
 				   
 			// create table
 			result = db.CreateTable(schema);
@@ -2180,7 +3272,7 @@ public class Main : MonoBehaviour
 			schema.AddField("menu_type", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
 			schema.AddField("menu_type_id", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
 			schema.AddField("menu_icon", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
-			schema.AddField("menu_order", SQLiteDB.DB_DataType.DB_VARCHAR, 100, false, false, false);
+			schema.AddField("menu_order", SQLiteDB.DB_DataType.DB_INT, 0, false, false, false);
 				   
 			// create table
 			result = db.CreateTable(schema); 
@@ -2192,5 +3284,6 @@ public class Main : MonoBehaviour
 		
 		
 	}
+
 	
 }
