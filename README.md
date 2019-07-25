@@ -2,6 +2,8 @@
 
 ![bnlogo](https://user-images.githubusercontent.com/17184469/56422398-7136fb80-62a7-11e9-957c-7d43c2e77e15.png)
 
+JULY UPDATE: Testing of the Desktop Client for Windows, Linux and Mac has started. Please contact admins on Telegram to be part of the testing.
+
 On Bitnation’s Blockchain Jurisdiction you can: * create smart contract agreements through an end-to-end encrypted chat interfce * join, leave and create opt-in nations and communities * buy and sell governance services or products peer-to-peer. Our core technology principles are: * open-source software * blockchain agnostic backend * end-to-end encrypted communications.
 
 Here's the latest updated desktop client [development roadmap](https://steemit.com/bitnation/@bitnation/bitnation-pangea-jurisdiction-desktop-client-roadmap)
