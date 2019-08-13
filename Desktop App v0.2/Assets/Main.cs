@@ -38,7 +38,8 @@ public class Main : MonoBehaviour
 	private string clicked_id;
 	private string current_chat;
 	private Hashtable vars;
-
+	private int update_chat = 0;
+	
 	
 	// PREFABS	
 	public Transform menu_nation;
@@ -54,6 +55,12 @@ public class Main : MonoBehaviour
 	public Transform dropdown;
 	public Transform textarea;
 	public Transform chat_bubble;
+	public Transform passport;
+	
+	// Update Variables
+	
+	float timeleft = 0;
+	float timetoupdate = 3; // 3 seconds between each update
 
 	// Start is called before the first frame update
     void Start()
@@ -98,8 +105,12 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
 			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-100));
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height-100));
 			log("    > Chat Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			
+			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-289.5), (float)(Screen.height-100));
+			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			
 			
 			GameObject.Find("Screens").transform.Find("Chat").gameObject.SetActive(false);
 			log("    > Chat set to inactive");
@@ -112,6 +123,9 @@ public class Main : MonoBehaviour
 	
 			current_nation = "0";
 			log("    > Current Nation set to "+current_nation);
+
+			id_user = "0";
+			log("    > id_user set to "+id_user);
 
 			
 			// MAIN DATABASE
@@ -171,15 +185,19 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-50));
+			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height-50));
 			log("    > Page/Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
 			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-100));
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height-100));
 			log("    > Chat/Content size changed to : "+GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta);
-					
+				
+			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-289.5), (float)(Screen.height-100));
+			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			
+				
 			screen_height = Screen.height;
 			screen_width = Screen.width;
 			
@@ -209,8 +227,56 @@ public class Main : MonoBehaviour
 			
         }		
 		
+		// Checks if the user is logged in so it can update
+		if(id_user != "0" && timetoupdate != 0){
+			
+				timeleft -= Time.deltaTime;
+			
+				if(timeleft <= 0){
+					
+					timeleft = timetoupdate;
+					
+					update_request();
+										
+				}
+									
+		}	
+	
 		
+		if( current_chat  != "" ){
+			
+			// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0, 1103, 0);
 		
+			// GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 0f;
+		
+		}
+		
+		if(update_chat == 1){
+			
+			GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 0f;
+			
+			update_chat = 0;			
+			
+		}
+		
+		/*
+		if(update_chat == 2){
+			
+			GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0, 1103, 0);
+		
+			Debug.Log(GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+		
+			update_chat = 0;
+			
+		}
+	
+		if(update_chat == 1){
+			
+			update_chat = 2;			
+			
+		}
+		*/		
+	
     }
 	
 	// ***********************************
@@ -679,10 +745,13 @@ public class Main : MonoBehaviour
 					
 						delegate{ 
 						
-									request_page2("main_page"+menu_type_id, nation_id, "");
+									/* request_page2("main_page"+menu_type_id, nation_id, ""); */
+									
+									/* request_chat(menu_type_id); */
+									
 									
 						
-									/* request_page("2",menu_type_id,nation_id); */
+									request_page("2",menu_type_id,nation_id);
 									
 									log("        > Clicked on main id: " + menu_type_id );
 									
@@ -1548,6 +1617,162 @@ public class Main : MonoBehaviour
 							
 					
 				}
+				else if(pageitems.Name == "passport")
+				{
+					
+					obj = Instantiate(passport, new Vector3(0, 0, 0), Quaternion.identity);
+					
+					obj.SetParent(parent, false);
+					
+					if(pageitems.Attributes["citzen_name"] != null)
+					{
+						
+						obj.transform.Find("citzen_name").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.Attributes["citzen_name"].Value); // .Replace("{l}", "<").Replace("{b}", ">");
+						obj.transform.Find("hash1").GetComponent<TextMeshProUGUI>().text = format_text("> " + pageitems.Attributes["citzen_name"].Value + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+					}
+					else
+					{
+						
+						obj.transform.Find("citzen_name").GetComponent<TextMeshProUGUI>().text = format_text("Error!"); // .Replace("{l}", "<").Replace("{b}", ">");
+						obj.transform.Find("hash1").GetComponent<TextMeshProUGUI>().text = format_text("> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"); // .Replace("{l}", "<").Replace("{b}", ">");
+										
+					}
+					
+					if(pageitems.Attributes["citzen_id"] != null)
+					{
+						
+						obj.transform.Find("citzen_id").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.Attributes["citzen_id"].Value); // .Replace("{l}", "<").Replace("{b}", ">");
+						obj.transform.Find("hash2").GetComponent<TextMeshProUGUI>().text = format_text("> " + pageitems.Attributes["citzen_id"].Value + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+					}
+					else
+					{
+						
+						obj.transform.Find("citzen_id").GetComponent<TextMeshProUGUI>().text = format_text("Error!"); // .Replace("{l}", "<").Replace("{b}", ">");
+							obj.transform.Find("hash2").GetComponent<TextMeshProUGUI>().text = format_text("> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"); // .Replace("{l}", "<").Replace("{b}", ">");
+										
+					}
+					
+					if(pageitems.Attributes["citzen_role"] != null)
+					{
+						
+						obj.transform.Find("citzen_role").GetComponent<TextMeshProUGUI>().text = format_text(pageitems.Attributes["citzen_role"].Value); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+					}
+					else
+					{
+						
+						obj.transform.Find("citzen_role").GetComponent<TextMeshProUGUI>().text = format_text("Error!"); // .Replace("{l}", "<").Replace("{b}", ">");
+											
+					}
+					
+					if(pageitems.Attributes["citzen_since"] != null)
+					{
+						
+						System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+						dtDateTime = dtDateTime.AddSeconds( int.Parse(pageitems.Attributes["citzen_since"].Value) ).ToLocalTime();
+					
+						obj.transform.Find("citzen_since").GetComponent<TextMeshProUGUI>().text = (format_text( ""+dtDateTime)).Substring(0, 10); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+					}
+					else
+					{
+												
+						obj.transform.Find("citzen_since").GetComponent<TextMeshProUGUI>().text = format_text("Error!"); // .Replace("{l}", "<").Replace("{b}", ">");
+											
+					}
+					
+					if(pageitems.Attributes["title"] != null)
+					{
+						
+						obj.transform.Find("nation_name").GetComponent<TextMeshProUGUI>().text = (format_text( ""+pageitems.Attributes["title"].Value)); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+					}
+					else
+					{
+												
+						obj.transform.Find("nation_name").GetComponent<TextMeshProUGUI>().text = format_text("Passport"); // .Replace("{l}", "<").Replace("{b}", ">");
+											
+					}
+					
+					if(pageitems.Attributes["background"] != null)
+					{
+						
+						texture = Resources.Load<Texture2D>("images/"+pageitems.Attributes["background"].Value); // +reader.GetStringValue("menu_icon") +".png"
+			
+						obj.transform.Find("Background").GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f,0.5f));
+			
+						
+						// obj.transform.Find("Background").GetComponent<TextMeshProUGUI>().text = (format_text( ""+pageitems.Attributes["citzen_role"].Value)); // .Replace("{l}", "<").Replace("{b}", ">");
+					
+					}
+					else
+					{
+												
+						// obj.transform.Find("Background").GetComponent<TextMeshProUGUI>().text = format_text("Passport"); // .Replace("{l}", "<").Replace("{b}", ">");
+											
+					}
+					
+					
+					
+					
+					
+					/*
+					
+					obj1 = Instantiate(label, new Vector3(10, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<TextMeshProUGUI>().text = format_text(pageitems.InnerText);
+					
+					obj1.SetParent(obj.transform, false);
+					
+					obj1 = Instantiate(inputfield, new Vector3(150, -4, 0), Quaternion.identity);
+					
+					obj1.GetComponent<RectTransform>().sizeDelta = new Vector2(400, (float)(40));
+			
+					obj1.SetParent(obj.transform, false);
+					
+					
+					
+					if(pageitems.Attributes["id"] != null)
+					{
+						
+						log("    > ******************* ID : "+pageitems.Attributes["id"].Value); 
+						
+						obj1.name = pageitems.Attributes["id"].Value;
+						
+						if(first_field == ""){
+							
+							first_field = pageitems.Attributes["id"].Value;
+							
+						}
+						
+					}else{
+						
+						log("    > ******************* CADE O ID?"); 
+						
+					};
+					
+					// log("    > ******************* VAI CHAMAR"); 
+										
+					if(pageitems.Attributes["value"] != null)
+					{
+						
+						// log("    > ENTROU"); 
+					
+						obj1.GetComponent<TMP_InputField>().text = pageitems.Attributes["value"].Value;
+					
+						// set_value(pageitems.Attributes["id"].Value, pageitems.Attributes["value"].Value);
+						
+					};
+					
+					*/
+					
+					// log("    > ******************* SAIU"); 
+										
+					log("    > Page passport created"); 
+										
+				}	
 				else if(pageitems.Name == "textarea")
 				{
 					
@@ -2062,7 +2287,54 @@ public class Main : MonoBehaviour
 		
 	}
 	
-	private void Load_chat(SimpleJSON.JSONNode r){
+	public void view_profile()
+	{
+		
+		// GameObject.Find("Screens/Chat/Content").GetComponent<ScrollRect>().verticalScrollbar.value = 1;
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0, 1103, 0);
+		
+		
+		Debug.Log(">> " + GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0.0f, 1103, 0.0f);
+		
+		// Debug.Log(GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+		
+	}
+	
+	public void view_profile2()
+	{
+		
+		// GameObject.Find("Screens/Chat/Content").GetComponent<ScrollRect>().verticalScrollbar.value = 1;
+		
+		// transform.position = new Vector3(transform.position.x, transform.y -  bounceSpeed, transform.position.z);
+		
+		/*
+		Transform transform = GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform;
+		
+		transform.position = new Vector3(transform.position.x, 1100, transform.position.z);
+		
+		*/
+		
+		GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 0f;
+		
+		Debug.Log(">> POS: " + GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition );
+				
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position.y = 1100; // new Vector3(0.0f, 1103, 0.0f);
+		
+		
+		// Debug.Log(">> " + GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0.0f, 1103, 0.0f);
+		
+		// Debug.Log(GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+		
+	}
+		
+	private void Load_chat(SimpleJSON.JSONNode r)
+	{
 		
 		log("\r\n    == INIT Load_chat ==\r\n");
 		
@@ -2123,6 +2395,44 @@ public class Main : MonoBehaviour
 				}					
 				
 			}
+			
+			
+			//Transform transform = GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform;
+		
+			// transform.position = new Vector3(transform.position.x, 1100, transform.position.z);
+		
+			/*
+			
+			Canvas.ForceUpdateCanvases();
+		
+			GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
+					
+			Debug.Log(">> POS: " + GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition );
+		
+			Canvas.ForceUpdateCanvases();
+			
+			*/
+			
+			// GameObject.Find("Screens/Sidebar/User").gameObject.GetComponent<Button>().onClick.Invoke();
+		
+		
+			// update_chat = 1;
+		
+		// set chat to bottom
+		
+		// Canvas.ForceUpdateCanvases();
+		
+		// Transform content2 = GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform;
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0.0f, 1103, 0.0f);
+		
+		// Debug.Log(GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+
+		// StartCoroutine( ForceScrollDown() );
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0.0f, 1103, 0.0f);
+		
+		// .sizeDelta = new Vector2(0, (float)(Screen.height-142));
 		
 		log("\r\n    == END Load_chat ==\r\n");
 		
@@ -2130,24 +2440,107 @@ public class Main : MonoBehaviour
 		
 	}
 	
-	public void send_chat(){
+	IEnumerator ForceScrollDown()
+	{
+		
+		// yield return new WaitForEndOfFrame();
+
+		// Canvas.ForceUpdateCanvases();
+		
+		//scrollRect.verticalScrollbar.value=0f;
+		
+		// GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position = new Vector3(0.0f, 1103, 0.0f);
+		
+		// GameObject.Find("Screens/Chat/Content").GetComponent<ScrollRect>().verticalScrollbar.value = 0;
+		
+		// Debug.Log(">> " + GameObject.Find("Screens/Chat/Content").GetComponent<ScrollRect>().verticalScrollbar.value);
+		
+		// Debug.Log(">>>>>>> " + GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform.position);
+
+		// Canvas.ForceUpdateCanvases();
+		
+
+		yield return null;
+		
+	}
+	
+	
+	public void send_chat()
+	{
 				
 		// Input_send
 		
 		// get_value(Input_send);
 		
 		log("\r\n    == INIT send_chat ==\r\n");
+		
+		
+		
+		
+		if(get_value("Input_send") != null && get_value("Input_send") != ""){
+			
+			//// Create a chat bubble with current message
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			////////////
+			
+			
+			DBReader reader = db.Select("Select * from users WHERE id_user ='" + id_user + "' LIMIT 1");
+			
+			last_update = "0";
+			
+			if (reader != null && reader.Read())
+			{
+
+				last_update = reader.GetStringValue("last_update");
+
+			}else{
 				
-			string json = "{\"request\": \"send_chat\",\"token\": \""+token+"\",\"id_chat_room\": \""+current_chat+"\",\"message\": \""+get_value("Input_send")+"\" } ";		
+				int result = db.Insert("INSERT INTO users VALUES ('"+db_lastid("users")+"','"+id_user+"','0') ");
+
+				log("        > INSERT DB users: "+id_user+" - Result:  " + result );
+				
+				
+			}
+			
+			log("    > last_update set to : "+last_update);
+			
+			
+			string json = "{\"request\": \"send_chat\",\"current_chat\": \""+current_chat+"\",\"token\": \""+token+"\",\"last_update\": \""+last_update+"\",\"id_chat_room\": \""+current_chat+"\",\"message\": \""+get_value("Input_send")+"\" } ";		
 				
 			StartCoroutine(apicom(json));
 		
 			set_value("Input_send", "");
+			
+			
+			timeleft = timetoupdate;
+			
+			
+			
+		}
+		
 		
 		log("\r\n    == END send_chat ==\r\n");
 		
 		
 	}
+	
+	public void request_account()
+	{
+		
+		request_page2("account", "1", "");
+									
+		
+		
+	}
+	
 	
 	// ***********************************
 	// 		Communication Functions
@@ -2172,7 +2565,7 @@ public class Main : MonoBehaviour
 		else if(production == 0)
 		{
 			
-			api_url = "http://bitnationapi.azurewebsites.net/api.php";
+			api_url = "http://bitnationapi.azurewebsites.net/testapi/api.php";
 			
 		}
 		else
@@ -2313,8 +2706,12 @@ public class Main : MonoBehaviour
 						}
 						else if(r["request"] == "send_chat")
 						{
+								
+							update_response(r);
+								
+							// Load_chat(r);
 							
-							update_request();
+							// update_request();
 							
 							
 						}
@@ -2682,11 +3079,6 @@ public class Main : MonoBehaviour
 		
 	}
 	
-	
-	
-	
-	
-
 	private void join_nation_response(SimpleJSON.JSONNode r)
 	{
 		
@@ -2909,7 +3301,7 @@ public class Main : MonoBehaviour
 		try
         {
 			
-			return GameObject.Find(target).GetComponent<TMP_InputField>().text.Replace("<", "{l}").Replace(">", "{b}").Replace("\"", "{a}");
+			return GameObject.Find(target).GetComponent<TMP_InputField>().text.Replace("<", "{l}").Replace(">", "{b}").Replace("\"", "{a}").Replace("\r\n", "{n}").Replace("\r", "{n}").Replace("\n", "{n}");
 		
         }
         catch (Exception e)
@@ -2929,7 +3321,7 @@ public class Main : MonoBehaviour
 		try
         {
 			
-			GameObject.Find(target).GetComponent<TMP_InputField>().text = data.Replace("{l}", "<").Replace("{b}", ">").Replace("{a}", "\"");
+			GameObject.Find(target).GetComponent<TMP_InputField>().text = data.Replace("{l}", "<").Replace("{b}", ">").Replace("{a}", "\"").Replace("{n}", "\r\n").Replace("{n}", "\r").Replace("{n}", "\n");
 			
         }
         catch (Exception e)
@@ -3048,7 +3440,7 @@ public class Main : MonoBehaviour
 		try
         {
 			
-			return text.Replace("{l}", "<").Replace("{b}", ">");
+			return text.Replace("{l}", "<").Replace("{b}", ">").Replace("{n}", "\r\n").Replace("{n}", "\r").Replace("{n}", "\n");
 			
         }
         catch (Exception e)
@@ -3196,15 +3588,20 @@ public class Main : MonoBehaviour
 	// Log Console Function
 	private void log(string msg)
 	{
-		 
+		
+		/*
 		Debug.Log(msg);
 
+		
+		 
+		
 		if(GameObject.Find("Screens").transform.Find("Console/Text") != null)
 		{
 			
 			GameObject.Find("Screens").transform.Find("Console/Text").GetComponent<TMP_InputField>().text += msg + "\r\n";	
 					
 		}
+		*/
 				
 	}
 	
