@@ -8,6 +8,8 @@ On Bitnation’s Blockchain Jurisdiction you can: * create smart contract agreem
 
 Here's the latest updated desktop client [development roadmap](https://steemit.com/bitnation/@bitnation/bitnation-pangea-jurisdiction-desktop-client-roadmap)
 
+To INSTALL the desktop client for Linux, Windows and Mac, [follow the instructions here](http://bitnationapi.azurewebsites.net/downloads/). WARNING: it's solely intended for testing, not commercial usage at this stage.
+
 # BITNATION-Pangea-Desktop-Unity
 
 * Table of contents
