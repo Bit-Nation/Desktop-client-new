@@ -45,6 +45,7 @@ public class Main : MonoBehaviour
 	public Transform menu_nation;
 	public Transform new_nation;
 	public Transform menu_item;
+	public Transform menu_item2;
 	
 	public Transform paragraph;
 	public Transform button;
@@ -77,21 +78,21 @@ public class Main : MonoBehaviour
 			screen_height = Screen.height;
 			log("    > screen_height set to " + screen_height);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Menu").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Menu").GetComponent<RectTransform>().sizeDelta = new Vector2(275, (float)(Screen.height-172));
 			log("    > Sidebar/Menu size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Menu").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Nations").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Nations").GetComponent<RectTransform>().sizeDelta = new Vector2(272, (float)(Screen.height-172));
 			log("    > Sidebar/Nations size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Nations").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Contacts").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Contacts").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-172));
 			log("    > Sidebar/Contacts size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Contacts").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta = new Vector2(272, (float)(Screen.height-172));
 			log("    > Sidebar/Settings size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta);
 			
 			// Page
 			
-			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
+			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-50));
@@ -102,13 +103,13 @@ public class Main : MonoBehaviour
 
 			// Chat
 
-			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
+			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height-100));
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-100));
 			log("    > Chat Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-289.5), (float)(Screen.height-100));
+			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-100));
 			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			
@@ -132,7 +133,7 @@ public class Main : MonoBehaviour
 			
 			db.DBName = "Main.db";
 			db.DBLocation = Application.persistentDataPath;
-			bool result = db.CreateDatabase(db.DBName, false); // false = do not overwrite if it exists already
+			bool result = db.CreateDatabase(db.DBName, true); // false = do not overwrite if it exists already
 			
 			if(result == true)
 			{
@@ -170,31 +171,31 @@ public class Main : MonoBehaviour
 		
 			log("\r\n== INIT screen update ==\r\n");
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Menu").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Menu").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-172));
 			log("    > Sidebar/Menu size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Menu").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Nations").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Nations").GetComponent<RectTransform>().sizeDelta = new Vector2(272, (float)(Screen.height-172));
 			log("    > Sidebar/Nations size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Nations").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Contacts").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Contacts").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-172));
 			log("    > Sidebar/Contacts size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Contacts").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-142));
+			GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta = new Vector2(272, (float)(Screen.height-172));
 			log("    > Sidebar/Settings size changed to : "+GameObject.Find("Screens").transform.Find("Sidebar/Settings").GetComponent<RectTransform>().sizeDelta);
 						
-			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
+			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height-50));
+			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-50));
 			log("    > Page/Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height));
+			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-272.5), (float)(Screen.height-100));
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-100));
 			log("    > Chat/Content size changed to : "+GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta);
 				
-			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-289.5), (float)(Screen.height-100));
+			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-100));
 			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 				
@@ -545,16 +546,16 @@ public class Main : MonoBehaviour
 				GameObject.Find("Screens").transform.Find("Sidebar").gameObject.SetActive(true);
 				log("    > Screens/Sidebar set to inactive");
 
-				GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 1f);
+				GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color = new Color(0.9215686f, 0.9254902f, 0.945098f, 1f);
 				log("    > Tab1 color set to : "+GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color);
 			
-				GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 1f);
+				GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color = new Color(0.9215686f, 0.9254902f, 0.945098f, 1f);
 				log("    > Tab1 color set to : "+GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color);
 			
-				GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 1f);
+				GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color = new Color(0.9215686f, 0.9254902f, 0.945098f, 1f);
 				log("    > Tab1 color set to : "+GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color);
 			
-				GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 1f);
+				GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color = new Color(0.9215686f, 0.9254902f, 0.945098f, 1f);
 				log("    > Tab1 color set to : "+GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color);
 			
 				GameObject.Find("Screens/Sidebar").transform.Find("Menu").gameObject.SetActive(false);
@@ -571,8 +572,8 @@ public class Main : MonoBehaviour
 			
 				if(tab == "Tab1"){
 								
-					GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
-					log("    > Tab1 color set to : "+GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color);
+					// GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
+					// log("    > Tab1 color set to : "+GameObject.Find("Screens/Sidebar/Tab1").GetComponent<Image>().color);
 			
 					GameObject.Find("Screens/Sidebar").transform.Find("Menu").gameObject.SetActive(true);
 					log("    > Sidebar/menu set to inactive");
@@ -581,8 +582,8 @@ public class Main : MonoBehaviour
 				else if(tab == "Tab2")
 				{
 					
-					GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
-					log("    > Tab2 color set to : "+GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color);
+					// GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
+					// log("    > Tab2 color set to : "+GameObject.Find("Screens/Sidebar/Tab2").GetComponent<Image>().color);
 					
 					GameObject.Find("Screens/Sidebar").transform.Find("Nations").gameObject.SetActive(true);
 					log("    > Sidebar/Nations set to inactive");
@@ -592,8 +593,8 @@ public class Main : MonoBehaviour
 				else if(tab == "Tab3")
 				{
 					
-					GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
-					log("    > Tab3 color set to : "+GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color);
+					// GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
+					// log("    > Tab3 color set to : "+GameObject.Find("Screens/Sidebar/Tab3").GetComponent<Image>().color);
 					
 					GameObject.Find("Screens/Sidebar").transform.Find("Contacts").gameObject.SetActive(true);
 					log("    > Sidebar/Contacts set to inactive");
@@ -602,8 +603,8 @@ public class Main : MonoBehaviour
 				else if(tab == "Tab4")
 				{
 					
-					GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
-					log("    > Tab4 color set to : "+GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color);
+					// GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color = new Color(0.5490196f, 0.5803922f, 0.6666667f, 1f);
+					// log("    > Tab4 color set to : "+GameObject.Find("Screens/Sidebar/Tab4").GetComponent<Image>().color);
 					
 					GameObject.Find("Screens/Sidebar").transform.Find("Settings").gameObject.SetActive(true);
 					log("    > Sidebar/Settings set to inactive");
@@ -732,7 +733,17 @@ public class Main : MonoBehaviour
 			
 			if(reader.GetStringValue("menu_type") == "1"){
 				
-				obj = Instantiate(menu_item, new Vector3(0, 0, 0), Quaternion.identity);
+				if(reader.GetStringValue("menu_type_id") == "4" || reader.GetStringValue("menu_type_id") == "5"){
+					
+					obj = Instantiate(menu_item, new Vector3(0, 0, 0), Quaternion.identity);
+				
+					
+				}else{
+					
+					obj = Instantiate(menu_item2, new Vector3(0, 0, 0), Quaternion.identity);
+					
+				}
+				
 				
 				string menu_type_id = reader.GetStringValue("menu_type_id");
 				string nation_id = reader.GetStringValue("id_nation");
@@ -809,7 +820,18 @@ public class Main : MonoBehaviour
 			else if(reader.GetStringValue("menu_type") == "3")
 			{
 				
-				obj = Instantiate(menu_item, new Vector3(0, 0, 0), Quaternion.identity);
+				if(reader.GetStringValue("menu_name") == "TOWNHALL" || reader.GetStringValue("menu_name") == "AJUNTAMENT"){
+					
+					obj = Instantiate(menu_item2, new Vector3(0, 0, 0), Quaternion.identity);
+				
+					
+				}else{
+					
+					obj = Instantiate(menu_item, new Vector3(0, 0, 0), Quaternion.identity);
+				
+					
+				}
+				
 				
 				string menu_type_id = reader.GetStringValue("menu_type_id");
 				string menu_type = reader.GetStringValue("menu_type");
@@ -1987,7 +2009,7 @@ public class Main : MonoBehaviour
 					else
 					{
 						
-						obj1.GetComponent<Image>().color = new Color(0.4061944f, 0.4431966f, 0.5283019f, 1f);
+						obj1.GetComponent<Image>().color = new Color(0.02352941f, 0.2039216f, 0.345098f, 1f);
 						
 						flag_title = 1;
 						
@@ -2361,6 +2383,8 @@ public class Main : MonoBehaviour
 			
 			int i = 0;
 			
+			float posy = -90;
+			
 			System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
 					
 			if(r["messages"] != null){
@@ -2376,7 +2400,7 @@ public class Main : MonoBehaviour
 					
 					// log("        > CHAT: " + r["messages"][(i-1)]["message"] );
 					
-					obj = Instantiate(chat_bubble, new Vector3(0, 0, 0), Quaternion.identity);
+					obj = Instantiate(chat_bubble, new Vector3(0, posy , 0), Quaternion.identity);
 					obj.SetParent(parent, false);
 			
 					obj.transform.Find("Text_message").GetComponent<TextMeshProUGUI>().text = format_text(r["messages"][(i-1)]["message"]);
@@ -2390,11 +2414,15 @@ public class Main : MonoBehaviour
 					
 					obj.transform.Find("Text_date").GetComponent<TextMeshProUGUI>().text = " "+dtDateTime;
 									
-									
+					posy -= 90;			
 				
 				}					
 				
+				
+				
 			}
+			
+			StartCoroutine( ForceScrollDown() );
 			
 			
 			//Transform transform = GameObject.Find("Screens/Chat/Content/Viewport/Content").gameObject.transform;
@@ -2459,8 +2487,19 @@ public class Main : MonoBehaviour
 
 		// Canvas.ForceUpdateCanvases();
 		
-
-		yield return null;
+		// Debug.Log("TIME 1 : "+Time.time);
+		
+        yield return new WaitForSeconds(0.1f);
+		
+        // Debug.Log("TIME 2 : "+Time.time);
+		
+		GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 0f;
+		
+		// Debug.Log(">> POS: " + GameObject.Find("Screens/Chat/Content").gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition );
+		
+		// Debug.Log("TIME 1 : "+Time.time);
+		
+        // yield return null;
 		
 	}
 	
@@ -3031,7 +3070,7 @@ public class Main : MonoBehaviour
 			
 			
 			
-			message("hide", "");
+			// message("hide", "");
 		
 			
 			// Load_page("");
@@ -3608,7 +3647,8 @@ public class Main : MonoBehaviour
 	// Log Error on Console Function
 	private void error(string msg)
 	{
-		 
+		
+		/*
 		Debug.Log("********** "+msg+" **********");
 
 		if(GameObject.Find("Screens").transform.Find("Console/Text") != null)
@@ -3617,6 +3657,7 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Console/Text").GetComponent<TMP_InputField>().text += "\r\n******************************\r\n"+msg+"\r\n******************************\r\n\r\n";	
 					
 		}
+		*/
 				
 	}
 	
