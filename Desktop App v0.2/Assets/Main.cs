@@ -20,7 +20,7 @@ public class Main : MonoBehaviour
 	private string app_version = "0.3";
 	
 	// production enviroment : 1 = true / 0 = false (test enviroment)
-	private int production = 0;
+	private int production = 1;
 	
 	// Variables to store Screen Size (used to control the resize of the screen window)
 	private float screen_width;
@@ -96,7 +96,7 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-50));
+			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, (float)(Screen.height-70));
 			log("    > Page Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Page").gameObject.SetActive(false);
@@ -107,19 +107,19 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-420.0), (float)(Screen.height-200)); // 320 / 100
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-420.0), (float)(Screen.height-230)); // 320 / 100
 			log("    > Chat Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			// GameObject.Find("Screens").transform.Find("Chat/Content").gameObject.transform.position = new Vector3(50, -100, 0); // 320 / 100
 			// log("    > Chat Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Chat/Content").gameObject.transform.localPosition = new Vector2(50, -100); // 320 / 100
+			GameObject.Find("Screens").transform.Find("Chat/Content").gameObject.transform.localPosition = new Vector2(50, -130); // 320 / 100
 		
-			GameObject.Find("Screens").transform.Find("Chat/Background").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-380.0), (float)(Screen.height-105));
-			GameObject.Find("Screens").transform.Find("Chat/Background").gameObject.transform.localPosition = new Vector2(30, -80); // 320 / 100
+			GameObject.Find("Screens").transform.Find("Chat/Background").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-380.0), (float)(Screen.height-135));
+			GameObject.Find("Screens").transform.Find("Chat/Background").gameObject.transform.localPosition = new Vector2(30, -110); // 320 / 100
 					
 				
-			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-435.0), (float)(Screen.height-300));
+			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-435.0), (float)(Screen.height-350));
 			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			
@@ -196,12 +196,28 @@ public class Main : MonoBehaviour
 			GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Page size changed to : "+GameObject.Find("Screens").transform.Find("Page").GetComponent<RectTransform>().sizeDelta);
 			
-			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-50));
+			GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-70));
 			log("    > Page/Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
 			
 			GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height));
 			log("    > Chat size changed to : "+GameObject.Find("Screens").transform.Find("Chat").GetComponent<RectTransform>().sizeDelta);
 			
+			
+			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-420.0), (float)(Screen.height-250)); // 320 / 100
+			log("    > Chat Content size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			
+			GameObject.Find("Screens").transform.Find("Chat/Content").gameObject.transform.localPosition = new Vector2(50, -150); // 320 / 100
+		
+			GameObject.Find("Screens").transform.Find("Chat/Background").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-380.0), (float)(Screen.height-155));
+			GameObject.Find("Screens").transform.Find("Chat/Background").gameObject.transform.localPosition = new Vector2(30, -130); // 320 / 100
+					
+				
+			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-435.0), (float)(Screen.height-350));
+			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
+			
+			
+			
+			/*
 			GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-320.0), (float)(Screen.height-100));
 			log("    > Chat/Content size changed to : "+GameObject.Find("Screens").transform.Find("Chat/Content").GetComponent<RectTransform>().sizeDelta);
 				
@@ -216,7 +232,7 @@ public class Main : MonoBehaviour
 			
 			GameObject.Find("Screens").transform.Find("Chat/Content/Viewport/Content").GetComponent<RectTransform>().sizeDelta = new Vector2((float)(Screen.width-435.0), (float)(Screen.height-100));
 			log("    > Chat Content 2 size changed to : "+GameObject.Find("Screens").transform.Find("Page/Content").GetComponent<RectTransform>().sizeDelta);
-			
+			*/
 				
 			screen_height = Screen.height;
 			screen_width = Screen.width;
@@ -1423,6 +1439,9 @@ public class Main : MonoBehaviour
 		
 	}
 
+
+	
+
 	// Load the contents of a given page
 	public void Load_page2(string name)
 	{
@@ -1554,6 +1573,20 @@ public class Main : MonoBehaviour
 						
 						
 					}
+					
+					if(pageitems.Attributes["link"] != null)
+					{
+						
+						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
+						
+						
+							Application.OpenURL("http://bitnationapi.azurewebsites.net/payments.php?v="+pageitems.Attributes["link"].Value);
+						
+						
+						});						
+						
+						
+					}
 				
 					
 					if(pageitems.Attributes["page"] != null)
@@ -1574,6 +1607,8 @@ public class Main : MonoBehaviour
 							fields = pageitems.Attributes["fields"].Value;
 						
 						}
+						
+						
 						
 						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
 						
@@ -2416,6 +2451,9 @@ public class Main : MonoBehaviour
 				
 			log("    > Chat title set to: "+get_text("Screens/Chat/Title/Text")); 
 
+			set_text("Screens/Chat/Title/Text_description", r["room_description"]);
+			
+	
 			current_chat = r["id_chat_room"];
 			
 			/// 
