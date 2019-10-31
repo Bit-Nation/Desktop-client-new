@@ -1445,6 +1445,8 @@ public class Main : MonoBehaviour
 	// Load the contents of a given page
 	public void Load_page2(string name)
 	{
+	
+		// Debug.Log("== INIT loadpage 2 ==\r\n");
 			
 		log("== INIT loadpage 2 ==\r\n");
 			
@@ -1519,11 +1521,15 @@ public class Main : MonoBehaviour
 			
 			Transform parent = GameObject.Find("Screens/Page/Content/Viewport/Content").gameObject.transform;
 			
+			// Debug.Log("== CLEAR ==\r\n");
+		
+			
 			foreach (XmlNode pageitems in pagecontent) {
 								
 				// log(" PAGE :::::: Child name: "+pageitems.Name+" - id : "+pageitems.Attributes["id"].Value+" ");
 				
-				
+				// Debug.Log("== NAME: "+pageitems.Name+" ==\r\n");
+		
 				
 				if(pageitems.Name == "text")
 				{
@@ -1577,10 +1583,11 @@ public class Main : MonoBehaviour
 					if(pageitems.Attributes["link"] != null)
 					{
 						
+						
 						obj1.GetComponent<Button>().onClick.AddListener( delegate { 
 						
 						
-							Application.OpenURL("http://bitnationapi.azurewebsites.net/payments.php?v="+pageitems.Attributes["link"].Value);
+							Application.OpenURL("http://bitnationapi.azurewebsites.net/payments.php?"+format_text(pageitems.Attributes["link"].Value));
 						
 						
 						});						
@@ -2841,6 +2848,9 @@ public class Main : MonoBehaviour
 						else if(r["request"] == "page2")
 						{
 							
+							Debug.Log("********** CONTENT "+r["content"]+" **********");
+
+							
 							savefile("temp", r["content"]);
 							
 							// Load_page("temp");
@@ -3593,7 +3603,7 @@ public class Main : MonoBehaviour
 		try
         {
 			
-			return text.Replace("{l}", "<").Replace("{b}", ">").Replace("{n}", "\r\n").Replace("{n}", "\r").Replace("{n}", "\n");
+			return text.Replace("{l}", "<").Replace("{b}", ">").Replace("{n}", "\r\n").Replace("{n}", "\r").Replace("{n}", "\n").Replace("{e}", "&");
 			
         }
         catch (Exception e)
