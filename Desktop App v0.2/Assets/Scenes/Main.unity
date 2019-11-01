@@ -11952,7 +11952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -14954,14 +14954,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, Unity.ugui,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: c38c1dabfc0ce394fa16e8bfca03c56a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e0db8c335b47fb34f9d5c601d8674555, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20752,7 +20752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8490566, g: 0.7168921, b: 0.7244444, a: 0.34117648}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -21762,8 +21762,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190420
-  m_fontColor: {r: 0.32941177, g: 0.003921569, b: 0, a: 1}
+    rgba: 4281940281
+  m_fontColor: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -28902,41 +28902,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
-    - target: {fileID: 165023247804297426, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040431592165781633, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040431592165781633, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040431592165781633, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 112.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040431592165781633, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -20.055
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040431592165781633, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 204.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040431592165781633, guid: e1de648daabbca2448f4540ef23f4059,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 20.11
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1de648daabbca2448f4540ef23f4059, type: 3}
 --- !u!224 &1485452678030552235 stripped
@@ -29417,7 +29382,7 @@ PrefabInstance:
     - target: {fileID: 1895453485644808829, guid: 65c1700b605f90542ad72ec7f80b9906,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 486.48004
+      value: 728.2001
       objectReference: {fileID: 0}
     - target: {fileID: 1895453485644808829, guid: 65c1700b605f90542ad72ec7f80b9906,
         type: 3}
@@ -30330,12 +30295,12 @@ PrefabInstance:
     - target: {fileID: 7108179935273085331, guid: 2330d1bd00f6571468b123254b9706fa,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7108179935273085331, guid: 2330d1bd00f6571468b123254b9706fa,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 486.48004
+      value: 728.2001
       objectReference: {fileID: 0}
     - target: {fileID: 7108179935273085331, guid: 2330d1bd00f6571468b123254b9706fa,
         type: 3}

@@ -1329,7 +1329,10 @@ public class Main : MonoBehaviour
 					else
 					{
 						
-						obj1.GetComponent<Image>().color = new Color(0.4061944f, 0.4431966f, 0.5283019f, 1f);
+						// obj1.GetComponent<Image>().color = new Color(0.4061944f, 0.4431966f, 0.5283019f, 1f);
+						
+						obj1.GetComponent<Image>().color = new Color(0.7215686f, 0.1803922f, 0.1921569f, 1f);
+						
 						
 						flag_title = 1;
 						
@@ -2070,7 +2073,9 @@ public class Main : MonoBehaviour
 					else
 					{
 						
-						obj1.GetComponent<Image>().color = new Color(0.02352941f, 0.2039216f, 0.345098f, 1f);
+						// obj1.GetComponent<Image>().color = new Color(0.02352941f, 0.2039216f, 0.345098f, 1f);
+						
+						obj1.GetComponent<Image>().color = new Color(0.7215686f, 0.1803922f, 0.1921569f, 1f);
 						
 						flag_title = 1;
 						
