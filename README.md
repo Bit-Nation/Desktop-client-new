@@ -22,7 +22,6 @@ To INSTALL the desktop client for Linux, Windows and Mac, [follow the instructio
 
 * [Thiago Souza](https://github.com/ThiagoVSouza)
 * [Susanne Tarkowski Tempelhof](https://github.com/xsttx)
-* [Prameet Chakraborty](https://github.com/prameetc)
 
 ## How to build the app
 
