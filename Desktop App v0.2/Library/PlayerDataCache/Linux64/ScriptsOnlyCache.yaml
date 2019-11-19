@@ -5,8 +5,6 @@ ScriptsOnlyBuild:
     - Main
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
-    - UnityEditor.Tilemaps.GridPaletteBrushes
-    - UnityEditor.Tilemaps.GridPalettes
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.TileDragAndDropManager
     Unity.TextMeshPro.dll:
@@ -35,7 +33,6 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.VerticalLayoutGroup
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
   sceneClasses:
     Assets/Scenes/Main.unity:
     - Class: 1
@@ -213,6 +210,18 @@ ScriptsOnlyBuild:
     className: TMP_InputField
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: UnityEngine.Advertisements.dll
+    namespaceName: UnityEngine.Advertisements
+    className: CallbackExecutor
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: UnityEngine.Advertisements.dll
+    namespaceName: UnityEngine.Advertisements.Editor
+    className: Placeholder
+  - hash:
+      serializedVersion: 2
       Hash: 7ab0e790220bdca831fdd886b339039d
     assemblyName: Unity.ugui.dll
     namespaceName: UnityEngine.UI
@@ -387,7 +396,7 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 8141b3d487696669ffe7f926bd0b826c
+      Hash: 75bc3d9bf07ffe814d6b5178a11da65d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Main
@@ -580,4 +589,4 @@ ScriptsOnlyBuild:
   platform: 24
   scenePathNames:
   - Assets/Scenes/Main.unity
-  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/Linux/version_0_3_1/desktopapp_linux.x86_64
+  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/Linux/desktopapp_linux_v0_3_5/desktopapp_linux_v0_3_5.x86_64

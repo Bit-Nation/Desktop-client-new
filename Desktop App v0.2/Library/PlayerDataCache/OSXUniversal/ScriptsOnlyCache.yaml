@@ -35,7 +35,6 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.VerticalLayoutGroup
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
   sceneClasses:
     Assets/Scenes/Main.unity:
     - Class: 1
@@ -387,7 +386,7 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 8141b3d487696669ffe7f926bd0b826c
+      Hash: 75bc3d9bf07ffe814d6b5178a11da65d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Main
@@ -580,4 +579,4 @@ ScriptsOnlyBuild:
   platform: 2
   scenePathNames:
   - Assets/Scenes/Main.unity
-  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/OSX/desktopapp_mac_v_0_3_1.app
+  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/OSX/desktopapp_mac_v_0_3_12.app

@@ -387,7 +387,7 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 8141b3d487696669ffe7f926bd0b826c
+      Hash: 75bc3d9bf07ffe814d6b5178a11da65d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Main
@@ -580,5 +580,5 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/Main.unity
-  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/Windows/Version_0_3_1/Bitnation
-    Desktop APP_Data/Bitnation Desktop APP.exe
+  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/Windows/desktopapp_win_v0_3_5/Bitnation
+    Desktop APP.exe
