@@ -580,5 +580,5 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/Main.unity
-  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/Windows/desktopapp_win_v0_3_5/Bitnation
+  playerPath: C:/Users/bpsou/Desktop/PANGEA/DESKTOP/Builds/Windows/desktopapp_win_v0_3_13/Bitnation
     Desktop APP.exe
